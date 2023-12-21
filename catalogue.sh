@@ -28,25 +28,25 @@ dnf module disable nodejs -y &>> $LOGFILE
 VALIDATE $? "the nodejs module old version disabled"
 
 dnf module enable nodejs:18 -y &>> $LOGFILE
-VALIDATE $? "the nodejs module new version disabled"
+VALIDATE $? "the nodejs module new version enabled"
 
 dnf install nodejs -y &>> $LOGFILE
 VALIDATE $? "the nodejs installation"
 
-useradd roboshop &>> $LOGFILE
+useradd roboshop
 VALIDATE $? "the user roboshop added"
 
-mkdir /app &>> $LOGFILE
+mkdir /app
 VALIDATE $? "the application app directory created"
 
-curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip &>> $LOGFILE
+curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip
 VALIDATE $? "Downloaded code to the application app directory"
 
 cd /app 
-npm install &>> $LOGFILE
+npm install
 VALIDATE $? "installing the npm dependencies"
 
-cp catalogue.service /etc/systemd/system/ &>> $LOGFILE
+cp catalogue.service /etc/systemd/system/
 VALIDATE $? "catalogue service is created in /etc/systemd/system"
 
 systemctl daemon-reload &>> $LOGFILE
