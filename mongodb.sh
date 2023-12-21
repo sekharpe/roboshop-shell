@@ -6,7 +6,7 @@ Y="\e[33m"
 N="\e[0m"
 ID=$(id -u)
 
-TIMESTAMP=$(date -%F-%H-%M-%S)
+TIMESTAMP=$(date +%F-%H-%M-%S)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
 if [ $ID -ne 0 ]
 then
@@ -21,6 +21,7 @@ VALIDATE(){
     echo -e "$2 is $R FAILED $N"
     else
     echo -e "$2 is $G SUCCESS $N"
+    fi
 }
 
 cp mongo.repo /etc/yum.repos.d
