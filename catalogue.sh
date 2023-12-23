@@ -47,7 +47,7 @@ cd /app
 npm install &>> $LOGFILE
 VALIDATE $? "installing the npm dependencies"
 
-cp /home/centos/roboshop-shell/catalogue.service /etc/systemd/system/
+cp /root/roboshop-shell/catalogue.service /etc/systemd/system/
 VALIDATE $? "catalogue service is created in /etc/systemd/system"
 
 systemctl daemon-reload &>> $LOGFILE
