@@ -59,7 +59,7 @@ VALIDATE $? "catalogue service is enabled now"
 systemctl start catalogue &>> $LOGFILE
 VALIDATE $? "catalogue service is started now"
 
-cp mongo.repo /etc/yum.repos.d/ &>> $LOGFILE
+cp /root/roboshop-shell//mongo.repo /etc/yum.repos.d/ &>> $LOGFILE
 VALIDATE $? "mongo.repo added to /etc/yum.repos"
 
 dnf install mongodb-org-shell -y &>> $LOGFILE
