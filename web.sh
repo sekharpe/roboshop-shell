@@ -1,55 +1,67 @@
 #!/bin/bash
 
+ID=$(id -u)
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
-ID=$(id -u)
-MONGODB_HOST=mongodb.pghub.online
+MONGDB_HOST=mongodb.daws76s.online
 
 TIMESTAMP=$(date +%F-%H-%M-%S)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
-if [ $ID -ne 0 ]
-then
-echo -e "please switch to root user"
-else
-echo -e "you are the root user to run the sript"
-fi
+
+echo "script stareted executing at $TIMESTAMP" &>> $LOGFILE
 
 VALIDATE(){
     if [ $1 -ne 0 ]
     then
-    echo -e "$2 is $R FAILED $N"
-    exit 1
+        echo -e "$2 ... $R FAILED $N"
+        exit 1
     else
-    echo -e "$2 is $G SUCCESS $N"
+        echo -e "$2 ... $G SUCCESS $N"
     fi
 }
 
+if [ $ID -ne 0 ]
+then
+    echo -e "$R ERROR:: Please run this script with root access $N"
+    exit 1 # you can give other than 0
+else
+    echo "You are root user"
+fi # fi means reverse of if, indicating condition end
+
 dnf install nginx -y &>> $LOGFILE
-VALIDATE $? "install nginx"
+ 
+VALIDATE $? "Installing nginx"
 
 systemctl enable nginx &>> $LOGFILE
-VALIDATE $? "enabled the nginx"
+
+VALIDATE $? "Enable nginx" 
 
 systemctl start nginx &>> $LOGFILE
-VALIDATE $? "starting the service nginx"
+
+VALIDATE $? "Starting Nginx"
 
 rm -rf /usr/share/nginx/html/* &>> $LOGFILE
-VALIDATE $? "rempving the original nginx template code"
+
+VALIDATE $? "removed default website"
 
 curl -o /tmp/web.zip https://roboshop-builds.s3.amazonaws.com/web.zip &>> $LOGFILE
-VALIDATE $? "downloading the frontend code nginx"
 
-cd /usr/share/nginx/html
-VALIDATE $? "switching to /usr/share/nginx/html directory"
+VALIDATE $? "Downloaded web application"
+
+cd /usr/share/nginx/html &>> $LOGFILE
+
+VALIDATE $? "moving nginx html directory"
 
 unzip -o /tmp/web.zip &>> $LOGFILE
-VALIDATE $? "unzipping the code nginx html directory"
 
-cp /root/roboshop-shell/roboshop.conf /etc/nginx/default.d/roboshop.conf 
-VALIDATE $? "copied the roboshop config file"
+VALIDATE $? "unzipping web"
+ 
+cp /root/roboshop-shell/roboshop.conf /etc/nginx/default.d/roboshop.conf &>> $LOGFILE 
 
-systemctl restart nginx  &>> $LOGFILE
-VALIDATE $? "nginx service restart complted"
+VALIDATE $? "copied roboshop reverse proxy config"
 
+systemctl restart nginx &>> $LOGFILE
+
+VALIDATE $? "restarted nginx"
