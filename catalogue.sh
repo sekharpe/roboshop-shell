@@ -48,6 +48,9 @@ cd /app
 npm install &>> $LOGFILE
 VALIDATE $? "installing the npm dependencies"
 
+unzip /tmp/catalogue.zip
+VALIDATE $? "unzip the code in to the /app directory"
+
 cp /root/roboshop-shell/catalogue.service /etc/systemd/system/
 VALIDATE $? "catalogue service is created in /etc/systemd/system"
 
