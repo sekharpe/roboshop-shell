@@ -5,6 +5,7 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 ID=$(id -u)
+MONGODB_HOST=mongodb.pghub.online
 
 TIMESTAMP=$(date +%F-%H-%M-%S)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
@@ -43,10 +44,10 @@ curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zi
 VALIDATE $? "Downloaded code to the application app directory"
 
 cd /app 
-npm install
+npm install &>> $LOGFILE
 VALIDATE $? "installing the npm dependencies"
 
-cp catalogue.service /etc/systemd/system/
+cp /home/centos/roboshop-shell/catalogue.service /etc/systemd/system/
 VALIDATE $? "catalogue service is created in /etc/systemd/system"
 
 systemctl daemon-reload &>> $LOGFILE
@@ -64,7 +65,7 @@ VALIDATE $? "mongo.repo added to /etc/yum.repos"
 dnf install mongodb-org-shell -y &>> $LOGFILE
 VALIDATE $? "mongodb client installation to push content to db"
 
-mongo --host mongodb.pghub.online </app/schema/catalogue.js &>> $LOGFILE
+mongo --host $MONGODB_HOST </app/schema/catalogue.js &>> $LOGFILE
 VALIDATE $? "loading the data to the DB"
 
 
