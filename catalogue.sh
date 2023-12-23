@@ -35,10 +35,17 @@ VALIDATE $? "the nodejs module new version enabled"
 dnf install nodejs -y &>> $LOGFILE
 VALIDATE $? "the nodejs installation"
 
-useradd roboshop
-VALIDATE $? "the user roboshop added"
+id roboshop
+if [ $? -ne 0]
+then
+    useradd roboshop
+    VALIDATE $? "the user roboshop created"
+else
+    echo -e " $Y SKIPPING $N since roboshop user already exist"
+fi
 
-mkdir /app
+
+mkdir -p /app
 VALIDATE $? "the application app directory created"
 
 curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip
@@ -48,7 +55,7 @@ cd /app
 npm install &>> $LOGFILE
 VALIDATE $? "installing the npm dependencies"
 
-unzip /tmp/catalogue.zip
+unzip -o /tmp/catalogue.zip
 VALIDATE $? "unzip the code in to the /app directory"
 
 cp /root/roboshop-shell/catalogue.service /etc/systemd/system/
