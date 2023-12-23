@@ -52,11 +52,12 @@ curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zi
 VALIDATE $? "Downloaded code to the application app directory"
 
 cd /app 
+unzip -o /tmp/catalogue.zip
+VALIDATE $? "unzip the code in to the /app directory"
+
 npm install &>> $LOGFILE
 VALIDATE $? "installing the npm dependencies"
 
-unzip -o /tmp/catalogue.zip
-VALIDATE $? "unzip the code in to the /app directory"
 
 cp /root/roboshop-shell/catalogue.service /etc/systemd/system/
 VALIDATE $? "catalogue service is created in /etc/systemd/system"
